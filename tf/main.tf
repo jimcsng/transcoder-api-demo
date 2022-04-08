@@ -59,7 +59,8 @@ resource "time_sleep" "wait_10_seconds" {
   depends_on = [
       google_project_service.enable_gcf,
       google_project_service.enable_transcoder,
-      google_project_service.enable_cloudbuild
+      google_project_service.enable_cloudbuild,
+      google_project_service.enable_compute
   ]
 
   create_duration = "10s"
@@ -69,15 +70,20 @@ resource "time_sleep" "wait_10_seconds" {
 # GCS Buckets for input and output videos
 # ------------------------------------------------------------------------------
 
+resource "random_id" "project" {
+    byte_length = 4
+}
+
+
 resource "google_storage_bucket" "transcoder_input_bucket" {
-  name          = "transcoder-input-bucket"
+  name          = "transcoder-input-bucket-${random_id.project.hex}"
   location      = "ASIA-EAST2"
   force_destroy = true
   uniform_bucket_level_access = true
 }
 
 resource "google_storage_bucket" "transcoder_output_bucket" {
-  name          = "transcoder-output-bucket"
+  name          = "transcoder-output-bucket-${random_id.project.hex}"
   location      = "ASIA-EAST2"
   force_destroy = true
   uniform_bucket_level_access = true
@@ -117,7 +123,7 @@ resource "null_resource" "role_bindings" {
 # ------------------------------------------------------------------------------
 
 resource "google_storage_bucket" "gcf_src_code_bucket" {
-  name          = "transcoder-gcf-src-code-bucket"
+  name          = "transcoder-gcf-src-code-bucket-${random_id.project.hex}"
   location      = "ASIA-EAST2"
   force_destroy = true
   uniform_bucket_level_access = true

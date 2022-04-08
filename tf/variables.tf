@@ -1,9 +1,9 @@
 variable "project_id" {
-    default = "icable-vod-poc"
+    default = ""
 }
 
 variable "project_number" {
-    default = "286354242877"
+    default = ""
 }
 
 variable "region" {
